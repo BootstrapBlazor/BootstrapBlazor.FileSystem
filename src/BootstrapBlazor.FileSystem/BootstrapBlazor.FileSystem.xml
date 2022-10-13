@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BootstrapBlazor.FileSystem</name>
+    </assembly>
+    <members>
+        <member name="T:BootstrapBlazor.Components.FileSystem">
+            <summary>
+            文件系统访问 File System Access 组件基类
+            </summary>
+        </member>
+        <member name="M:BootstrapBlazor.Components.FileSystem.GetFile">
+            <summary>
+            打开文件
+            </summary>
+        </member>
+        <member name="M:BootstrapBlazor.Components.FileSystem.GetDir">
+            <summary>
+            获取电量
+            </summary>
+        </member>
+        <member name="P:BootstrapBlazor.Components.FileSystem.OnError">
+            <summary>
+            获得/设置 错误回调方法
+            </summary>
+        </member>
+        <member name="P:BootstrapBlazor.Components.FileSystem.OnFileResult">
+            <summary>
+            获得/设置 电池信息回调方法
+            </summary>
+        </member>
+        <member name="M:BootstrapBlazor.Components.FileSystem.GetFileResult(BootstrapBlazor.Components.FileInfo)">
+            <summary>
+            获取电池信息完成回调方法
+            </summary> 
+            <returns></returns>
+        </member>
+        <member name="M:BootstrapBlazor.Components.FileSystem.VerifyPermission">
+            <summary>
+            获取电量
+            </summary>
+        </member>
+        <member name="M:BootstrapBlazor.Components.FileSystem.GetResult(System.String,BootstrapBlazor.Components.FileSystemHandle)">
+            <summary>
+            状态回调方法
+            </summary> 
+            <returns></returns>
+        </member>
+        <member name="T:BootstrapBlazor.Components.FileSystemHandle">
+            <summary>
+            文件系统句柄
+            </summary>
+        </member>
+        <member name="P:BootstrapBlazor.Components.FileSystemHandle.name">
+            <summary>
+            名称
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:BootstrapBlazor.Components.FileSystemHandle.kind">
+            <summary>
+            类型<para>'file'</para><para>'directory'</para>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:BootstrapBlazor.Components.FileSystemHandle.Permission">
+            <summary>
+            查询/请求权限
+            <para>'granted'</para><para>'no'</para>
+            <para></para>
+            const opts = {};<para></para>
+            opts.mode = 'readwrite';<para></para>
+            fileHandle.queryPermission(opts)<para></para>
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BootstrapBlazor.Components.FileInfo">
+            <summary>
+            文件信息
+            </summary>
+        </member>
+        <member name="P:BootstrapBlazor.FileSystem.Services.BaseService`1.OnResult">
+            <summary>
+            获得/设置 识别完成回调方法
+            </summary>
+        </member>
+        <member name="P:BootstrapBlazor.FileSystem.Services.BaseService`1.OnStatus">
+            <summary>
+            获得/设置 状态回调方法
+            </summary>
+        </member>
+        <member name="P:BootstrapBlazor.FileSystem.Services.BaseService`1.OnError">
+            <summary>
+            获得/设置 错误回调方法
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.FileSystemServiceCollectionExtensions">
+            <summary>
+            OCR 服务扩展类
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.FileSystemServiceCollectionExtensions.AddFileSystemExtensions(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            增加 OCR 服务扩展类,<para></para>
+            </summary>
+            <param name="services"></param>
+            <param name="key"></param>
+            <param name="url"></param> 
+            <returns></returns>
+        </member>
+    </members>
+</doc>

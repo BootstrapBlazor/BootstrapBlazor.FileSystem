@@ -1,1 +1,15 @@
-﻿@namespace BootstrapBlazor.Components 
+﻿@namespace BootstrapBlazor.Components
+
+<button onclick="@NewFile" class="btn btn-primary">新建</button>
+<button onclick="@GetFile" class="btn btn-primary">打开</button>
+<button onclick="@GetDir" class="btn btn-primary">打开目录</button>
+@if (FileHandle != null)
+{
+    <textarea style="width:100%;height:calc(100% - 6px);" onchange="@HandleOnChange" value="@FileText"></textarea>
+    <button onclick="@VerifyPermission" class="btn btn-primary">检查权限</button>
+    <button onclick="@SaveFile" class="btn btn-primary">写入文件</button>
+}
+<pre>
+@FileText
+@msg
+</pre>
