@@ -17,9 +17,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <summary>
         /// 增加 OCR 服务扩展类,<para></para>
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="key"></param>
-        /// <param name="url"></param> 
+        /// <param name="services"></param> 
         /// <returns></returns>
         public static IServiceCollection AddFileSystemExtensions(this IServiceCollection services)
         {
