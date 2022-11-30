@@ -27,20 +27,49 @@ https://blazor.app1.es/FileSystem
 
 3.razor页面
 ```
-<FileSystem OnError="@OnError" />
+<FileSystem OnFileText="OnFileText" 
+            OnFileStream="OnFileStream" 
+            OnDirectory="OnDirectory" 
+            />
+
+<pre>@contents</pre>
 
 ```
 ```
 @code{
 
-    private string message;
+    private string contents;
 
-    private Task OnError(string message)
+    private Task OnFileText(string contents)
     {
-        this.message = message;
+        this.contents = contents;
         StateHasChanged();
         return Task.CompletedTask;
     }
+    
+    private Task OnFileStream(Stream stream)
+    {
+        //using MiniExcelLibs
+        //private string contentsExcel;
+        //var rows = stream.Query().ToList();
+        //rows.ForEach(a=> contentsExcel += Environment.NewLine + string.Join(" | " , a ));
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+    
+    private Task OnDirectory(List<string> dirs)
+    {
+        if (dirs == null || !dirs.Any()) return Task.CompletedTask;
+        contents += "Dir:" + Environment.NewLine;
+        contents += dirs.First() + Environment.NewLine;
+        foreach (var item in dirs.Skip(1).OrderByDescending(a => a.StartsWith("+")).ThenBy(a => a))
+        {
+            contents += item + Environment.NewLine;
+        }
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
 
 } 
 ```

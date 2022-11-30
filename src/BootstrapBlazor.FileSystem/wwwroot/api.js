@@ -3,10 +3,11 @@
 const pickerOpts = {
     types: [
         {
-            description: 'Text documents / Images',
+            description: 'Text documents/Images/Office documents',
             accept: {
                 'text/plain': ['.txt'],
-                //'image/*': ['.txt', '.png', '.gif', '.jpeg', '.jpg']
+                'image/*': ['.txt', '.png', '.gif', '.jpeg', '.jpg'],
+                'office/*': ['.xls', '.xlsx', '.doc', '.docs']
             },
             startIn: 'desktop'
         },
@@ -15,6 +16,14 @@ const pickerOpts = {
     multiple: false
 };
 
+const pickerAllOpts = {
+    types: [
+        {             
+            startIn: 'desktop'
+        },
+    ], 
+    multiple: false
+};
 
 ////指定建议的文件名和起始目录
 //const txtfileHandle = await self.showSaveFilePicker({
@@ -52,9 +61,6 @@ export async function GetFile(wrapper)
     // get file contents
     const fileData = await fileHandle.getFile();
     const contents = await fileData.text(); //stream()text()arrayBuffer()slice()
-    //textArea.value = contents;
-    console.debug(fileHandle);
-    console.debug(fileData);
     wrapper.invokeMethodAsync('GetFileResult',
         {
             "lastModified": fileData.lastModified,
@@ -62,6 +68,7 @@ export async function GetFile(wrapper)
             "name": fileData.name,
             "size": fileData.size,
             "type": fileData.type,
+            "kind": fileHandle.kind,
             "name": fileData.name,
             "webkitRelativePath": fileData.webkitRelativePath,
         },
@@ -72,6 +79,30 @@ export async function GetFile(wrapper)
         "status": "GetFile ok",
         "contents": contents
     };
+
+}
+
+export async function GetFileStream(wrapper) {
+
+    // open file picker
+    [fileHandle] = await window.showOpenFilePicker(pickerAllOpts);
+
+    // get file contents
+    const fileData = await fileHandle.getFile();
+    const stream = await fileData.arrayBuffer();  //stream()text()arrayBuffer()slice()
+    wrapper.invokeMethodAsync('GetFileResult',
+        {
+            "lastModified": fileData.lastModified,
+            "lastModifiedDate": fileData.lastModifiedDate,
+            "name": fileData.name,
+            "size": fileData.size,
+            "type": fileData.type,
+            "kind": fileHandle.kind,
+            "name": fileData.name,
+            "webkitRelativePath": fileData.webkitRelativePath,
+        },
+    );
+    return stream;
 
 }
 
