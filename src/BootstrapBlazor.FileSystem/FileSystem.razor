@@ -21,14 +21,19 @@
     <button onclick="@VerifyPermission" class="btn btn-primary">@ButtonVerifyPermission</button>
     @if (ButtonSaveFile != null)
     {
-        <textarea style="width:100%;height:calc(100% - 6px);" onchange="@HandleOnChange" value="@FileText"></textarea>
+        <br />
+        <textarea style="width:80%;height:30vh;" onchange="@HandleOnChange" value="@FileText"></textarea>
+        <br />
         <button onclick="@SaveFile" class="btn btn-primary">@ButtonSaveFile</button>
     }
 }
 @if (Debug)
 {
-    <pre>
-    @FileText
-    @if (OnInfo == null) @msg
-    </pre>
+    <div style="background-color:black;color:white;margin:5px;font-size:small;">
+        <b>调试信息</b>
+        <pre>
+            @FileText
+            @if (OnInfo == null) @msg
+        </pre>
+    </div>
 }

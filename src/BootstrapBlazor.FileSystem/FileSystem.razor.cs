@@ -24,7 +24,7 @@ public partial class FileSystem : IAsyncDisposable
     /// 获得/设置 显示log
     /// </summary>
     [Parameter]
-    public bool Debug { get; set; } = true;
+    public bool Debug { get; set; } = false;
     
     /// <summary>
     /// 获得/设置 打开文件按钮文字 默认为 打开
@@ -141,6 +141,7 @@ public partial class FileSystem : IAsyncDisposable
 
     public virtual async Task NewFile()
     {
+        FileHandle=null;
         try
         {
             //指定建议的文件名
@@ -176,6 +177,8 @@ public partial class FileSystem : IAsyncDisposable
     /// </summary>
     public virtual async Task GetFileText()
     {
+        FileHandle = null;
+        FileText = string.Empty;
         try
         {
             FileHandle = await module!.InvokeAsync<FileSystemHandle>("GetFile", instance);
@@ -196,6 +199,8 @@ public partial class FileSystem : IAsyncDisposable
     /// </summary>
     public virtual async Task GetFileStream()
     {
+        FileHandle = null;
+        FileText = string.Empty;
         try
         {
             var dataReference =await module!.InvokeAsync<IJSStreamReference>("GetFileStream", instance);
@@ -221,6 +226,8 @@ public partial class FileSystem : IAsyncDisposable
     /// </summary>
     public virtual async Task GetDir()
     {
+        FileHandle = null;
+        FileText = string.Empty;
         try
         {
             var dirs = await module!.InvokeAsync<List<string>>("GetDir");
