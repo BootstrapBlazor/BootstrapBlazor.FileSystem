@@ -5,9 +5,7 @@
 // **********************************
 
 
-using System;
 using System.ComponentModel;
-using System.Text.Json.Serialization;
 
 namespace BootstrapBlazor.Components;
 
@@ -43,7 +41,7 @@ public class FileSystemHandle
     [DisplayName("类型")]
     public string? Permission { get; set; }
     public string? contents { get; set; }
-    
+
     public string? status { get; set; }
 
 }
@@ -58,7 +56,7 @@ public class FileInfo
     public string? name { get; set; }
     public long size { get; set; }
     public string? type { get; set; }
-    
+
     /// <summary>
     /// 类型<para>'file'</para><para>'directory'</para>
     /// </summary>

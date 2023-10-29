@@ -6,7 +6,6 @@
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using System.Reflection;
 
 namespace BootstrapBlazor.Components;
 
@@ -18,14 +17,14 @@ namespace BootstrapBlazor.Components;
 /// </summary>
 public partial class FileSystem : IAsyncDisposable
 {
-    [Inject] IJSRuntime? JS { get; set; }
+    [Inject] private IJSRuntime? JS { get; set; }
 
     /// <summary>
     /// 获得/设置 显示log
     /// </summary>
     [Parameter]
     public bool Debug { get; set; } = false;
-    
+
     /// <summary>
     /// 获得/设置 打开文件按钮文字 默认为 打开
     /// </summary>
@@ -100,7 +99,7 @@ public partial class FileSystem : IAsyncDisposable
     public Func<List<string>, Task>? OnDirectory { get; set; }
 
 
-    
+
     private IJSObjectReference? module;
     private DotNetObjectReference<FileSystem>? instance { get; set; }
     public string? msg = string.Empty;
@@ -110,7 +109,7 @@ public partial class FileSystem : IAsyncDisposable
     protected FileSystemHandle? FileHandle;
     private Task HandleOnChange(ChangeEventArgs args)
     {
-        FileText = args?.Value?.ToString()??"";
+        FileText = args?.Value?.ToString() ?? "";
         return Task.CompletedTask;
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -141,14 +140,14 @@ public partial class FileSystem : IAsyncDisposable
 
     public virtual async Task NewFile()
     {
-        FileHandle=null;
+        FileHandle = null;
         try
         {
             //指定建议的文件名
             //文件内容
-            FileHandle = await module!.InvokeAsync<FileSystemHandle>("newFile",  Guid.NewGuid().ToString() + ".txt",  Guid.NewGuid().ToString() );
-            FileText = FileHandle.contents??"";
-            msg += FileHandle.status + ":" + FileHandle?.name + " => " + FileText  + Environment.NewLine;
+            FileHandle = await module!.InvokeAsync<FileSystemHandle>("newFile", Guid.NewGuid().ToString() + ".txt", Guid.NewGuid().ToString());
+            FileText = FileHandle.contents ?? "";
+            msg += FileHandle.status + ":" + FileHandle?.name + " => " + FileText + Environment.NewLine;
             if (OnInfo != null) await OnInfo.Invoke(msg);
         }
         catch (Exception e)
@@ -162,7 +161,7 @@ public partial class FileSystem : IAsyncDisposable
     {
         try
         {
-            FileHandle = await module!.InvokeAsync<FileSystemHandle>("saveFile", FileText );
+            FileHandle = await module!.InvokeAsync<FileSystemHandle>("saveFile", FileText);
             msg += FileHandle.status + ":" + FileHandle?.name + Environment.NewLine;
         }
         catch (Exception e)
@@ -184,7 +183,7 @@ public partial class FileSystem : IAsyncDisposable
             FileHandle = await module!.InvokeAsync<FileSystemHandle>("GetFile", instance);
             FileText = FileHandle?.contents ?? "";
             if (OnFileText != null) await OnFileText.Invoke(FileText);
-            msg += FileHandle?.status + ":" + FileHandle?.name + " => " + (OnFileText != null?"":FileText) + Environment.NewLine;
+            msg += FileHandle?.status + ":" + FileHandle?.name + " => " + (OnFileText != null ? "" : FileText) + Environment.NewLine;
             if (OnInfo != null) await OnInfo.Invoke(msg);
         }
         catch (Exception e)
@@ -193,7 +192,7 @@ public partial class FileSystem : IAsyncDisposable
             if (OnError != null) await OnError.Invoke(e.Message);
         }
     }
-    
+
     /// <summary>
     /// 打开文件
     /// </summary>
@@ -203,7 +202,7 @@ public partial class FileSystem : IAsyncDisposable
         FileText = string.Empty;
         try
         {
-            var dataReference =await module!.InvokeAsync<IJSStreamReference>("GetFileStream", instance);
+            var dataReference = await module!.InvokeAsync<IJSStreamReference>("GetFileStream", instance);
             using var dataReferenceStream = await dataReference.OpenReadStreamAsync(maxAllowedSize: 10_000_000);
             if (dataReferenceStream != null && OnFileStream != null)
             {
@@ -219,8 +218,8 @@ public partial class FileSystem : IAsyncDisposable
             msg += e.Message + Environment.NewLine;
             if (OnError != null) await OnError.Invoke(e.Message);
         }
-    }    
-    
+    }
+
     /// <summary>
     /// 获取文件夹
     /// </summary>
@@ -235,7 +234,7 @@ public partial class FileSystem : IAsyncDisposable
             if (dirs == null || !dirs.Any()) return;
             msg += "Dir:" + Environment.NewLine;
             msg += dirs.First() + Environment.NewLine;
-            foreach (var item in dirs.Skip(1).OrderByDescending(a=>a.StartsWith ("+")).ThenBy(a => a))
+            foreach (var item in dirs.Skip(1).OrderByDescending(a => a.StartsWith("+")).ThenBy(a => a))
             {
                 msg += item + Environment.NewLine;
             }
@@ -284,6 +283,6 @@ public partial class FileSystem : IAsyncDisposable
             msg += e.Message + Environment.NewLine;
             if (OnError != null) await OnError.Invoke(e.Message);
         }
-    } 
+    }
 
 }
