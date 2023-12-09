@@ -17,7 +17,7 @@ namespace BootstrapBlazor.Components;
 /// </summary>
 public partial class FileSystem : IAsyncDisposable
 {
-    [Inject] private IJSRuntime? JS { get; set; }
+    [Inject] private IJSRuntime? JSRuntime { get; set; }
 
     /// <summary>
     /// 获得/设置 显示log
@@ -118,7 +118,7 @@ public partial class FileSystem : IAsyncDisposable
         {
             if (firstRender)
             {
-                Module = await JS!.InvokeAsync<IJSObjectReference>("import", "./_content/BootstrapBlazor.FileSystem/api.js" + "?v=" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
+                Module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/BootstrapBlazor.FileSystem/api.js" + "?v=" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
                 instance = DotNetObjectReference.Create(this);
             }
         }
