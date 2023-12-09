@@ -100,7 +100,7 @@ public partial class FileSystem : IAsyncDisposable
 
 
 
-    private IJSObjectReference? module;
+    private IJSObjectReference? Module { get; set; }
     private DotNetObjectReference<FileSystem>? instance { get; set; }
     public string? msg = string.Empty;
 
@@ -118,7 +118,7 @@ public partial class FileSystem : IAsyncDisposable
         {
             if (firstRender)
             {
-                module = await JS!.InvokeAsync<IJSObjectReference>("import", "./_content/BootstrapBlazor.FileSystem/api.js" + "?v=" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
+                Module = await JS!.InvokeAsync<IJSObjectReference>("import", "./_content/BootstrapBlazor.FileSystem/api.js" + "?v=" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
                 instance = DotNetObjectReference.Create(this);
             }
         }
@@ -131,9 +131,9 @@ public partial class FileSystem : IAsyncDisposable
 
     async ValueTask IAsyncDisposable.DisposeAsync()
     {
-        if (module is not null)
+        if (Module is not null)
         {
-            await module.DisposeAsync();
+            await Module.DisposeAsync();
         }
     }
 
@@ -145,7 +145,7 @@ public partial class FileSystem : IAsyncDisposable
         {
             //指定建议的文件名
             //文件内容
-            FileHandle = await module!.InvokeAsync<FileSystemHandle>("newFile", Guid.NewGuid().ToString() + ".txt", Guid.NewGuid().ToString());
+            FileHandle = await Module!.InvokeAsync<FileSystemHandle>("newFile", Guid.NewGuid().ToString() + ".txt", Guid.NewGuid().ToString());
             FileText = FileHandle.contents ?? "";
             msg += FileHandle.status + ":" + FileHandle?.name + " => " + FileText + Environment.NewLine;
             if (OnInfo != null) await OnInfo.Invoke(msg);
@@ -161,7 +161,7 @@ public partial class FileSystem : IAsyncDisposable
     {
         try
         {
-            FileHandle = await module!.InvokeAsync<FileSystemHandle>("saveFile", FileText);
+            FileHandle = await Module!.InvokeAsync<FileSystemHandle>("saveFile", FileText);
             msg += FileHandle.status + ":" + FileHandle?.name + Environment.NewLine;
         }
         catch (Exception e)
@@ -180,7 +180,7 @@ public partial class FileSystem : IAsyncDisposable
         FileText = string.Empty;
         try
         {
-            FileHandle = await module!.InvokeAsync<FileSystemHandle>("GetFile", instance);
+            FileHandle = await Module!.InvokeAsync<FileSystemHandle>("GetFile", instance);
             FileText = FileHandle?.contents ?? "";
             if (OnFileText != null) await OnFileText.Invoke(FileText);
             msg += FileHandle?.status + ":" + FileHandle?.name + " => " + (OnFileText != null ? "" : FileText) + Environment.NewLine;
@@ -202,7 +202,7 @@ public partial class FileSystem : IAsyncDisposable
         FileText = string.Empty;
         try
         {
-            var dataReference = await module!.InvokeAsync<IJSStreamReference>("GetFileStream", instance);
+            var dataReference = await Module!.InvokeAsync<IJSStreamReference>("GetFileStream", instance);
             using var dataReferenceStream = await dataReference.OpenReadStreamAsync(maxAllowedSize: 10_000_000);
             if (dataReferenceStream != null && OnFileStream != null)
             {
@@ -229,7 +229,7 @@ public partial class FileSystem : IAsyncDisposable
         FileText = string.Empty;
         try
         {
-            var dirs = await module!.InvokeAsync<List<string>>("GetDir");
+            var dirs = await Module!.InvokeAsync<List<string>>("GetDir");
             if (OnDirectory != null) await OnDirectory.Invoke(dirs);
             if (dirs == null || !dirs.Any()) return;
             msg += "Dir:" + Environment.NewLine;
@@ -275,7 +275,7 @@ public partial class FileSystem : IAsyncDisposable
     {
         try
         {
-            var result = await module!.InvokeAsync<bool>("verifyPermission");
+            var result = await Module!.InvokeAsync<bool>("verifyPermission");
             msg += (result ? "授权" : "未授权") + Environment.NewLine;
         }
         catch (Exception e)
