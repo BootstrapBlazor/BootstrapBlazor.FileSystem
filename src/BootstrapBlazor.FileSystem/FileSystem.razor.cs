@@ -6,6 +6,7 @@
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BootstrapBlazor.Components;
 
@@ -17,7 +18,10 @@ namespace BootstrapBlazor.Components;
 /// </summary>
 public partial class FileSystem : IAsyncDisposable
 {
-    [Inject] private IJSRuntime? JSRuntime { get; set; }
+    [Inject]
+    [NotNull]
+    private IJSRuntime? JSRuntime { get; set; }
+
 
     /// <summary>
     /// 获得/设置 显示log
@@ -101,7 +105,7 @@ public partial class FileSystem : IAsyncDisposable
 
 
     private IJSObjectReference? Module { get; set; }
-    private DotNetObjectReference<FileSystem>? instance { get; set; }
+    private DotNetObjectReference<FileSystem>? Instance { get; set; }
     public string? msg = string.Empty;
 
     protected string FileText = "";
@@ -119,7 +123,7 @@ public partial class FileSystem : IAsyncDisposable
             if (firstRender)
             {
                 Module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/BootstrapBlazor.FileSystem/api.js" + "?v=" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
-                instance = DotNetObjectReference.Create(this);
+                Instance = DotNetObjectReference.Create(this);
             }
         }
         catch (Exception e)
@@ -180,7 +184,7 @@ public partial class FileSystem : IAsyncDisposable
         FileText = string.Empty;
         try
         {
-            FileHandle = await Module!.InvokeAsync<FileSystemHandle>("GetFile", instance);
+            FileHandle = await Module!.InvokeAsync<FileSystemHandle>("GetFile", Instance);
             FileText = FileHandle?.contents ?? "";
             if (OnFileText != null) await OnFileText.Invoke(FileText);
             msg += FileHandle?.status + ":" + FileHandle?.name + " => " + (OnFileText != null ? "" : FileText) + Environment.NewLine;
@@ -202,7 +206,7 @@ public partial class FileSystem : IAsyncDisposable
         FileText = string.Empty;
         try
         {
-            var dataReference = await Module!.InvokeAsync<IJSStreamReference>("GetFileStream", instance);
+            var dataReference = await Module!.InvokeAsync<IJSStreamReference>("GetFileStream", Instance);
             using var dataReferenceStream = await dataReference.OpenReadStreamAsync(maxAllowedSize: 10_000_000);
             if (dataReferenceStream != null && OnFileStream != null)
             {
